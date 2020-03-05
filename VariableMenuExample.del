@@ -1,0 +1,37 @@
+//you must place the LiveVarEditLib.del file into the same folder as your other files and then import like so
+import "LiveVarEditLib.del";
+
+
+//when you have a variable that's going to be registered, access it as shown below instead of with the define keyword.
+//GetVariable(index given when registered in menu); turning them into macros like this makes it very easy to access them.
+//Likewise, if you want to set a variable from somewhere in the code other than the debug menu, use SetVariable(index, value)
+macro Speed: GetVariable(0);
+macro Gravity: GetVariable(1);
+
+
+//At the beginning of the game mode, the menu must be created
+rule:"Setup"
+Event.OngoingGlobal
+{
+    //CreateMenuOption(nameOfVariable, index, startingValue, smallInterval, bigInterval)
+    CreateMenuOption("Speed", 0, 100, 1,5);
+    CreateMenuOption("Gravity", 1, 100, 1,10);
+}
+
+
+//Create a rule to define when the UI will turn on and off.
+rule:"Toggle UI"
+Event.OngoingPlayer
+if(EventPlayer() == HostPlayer())
+if(IsButtonHeld(EventPlayer(), Button.Crouch) && IsButtonHeld(EventPlayer(), Button.Interact)){
+    //Call the ToggleUI function in order to open or close the UI
+    ToggleUI();
+    //This is where you refresh values. 
+    //A good way of handling this is to make values only refresh when the UI is closed; you can check the menuOpen attribute to test this. 
+    if(!menuOpen){
+        //The beauty of the GetVariable macros is shown here, where Speed appears to just be a normal variable
+        SetMoveSpeed(AllPlayers(), Speed);
+        SetGravity(AllPlayers(), Gravity);
+    }
+}
+

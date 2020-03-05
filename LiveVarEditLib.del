@@ -1,0 +1,112 @@
+globalvar define menuOpen = false;
+private globalvar define menuVisibleTo = Null();
+globalvar define menuOptionVars = [];
+private globalvar define menuOptionSmallIntervals = [];
+private globalvar define menuOptionBigIntervals = [];
+private globalvar define selectedOption = 0;
+
+private globalvar define UDalreadyPressed = false;
+private globalvar define LDPressCount = 0;
+
+//variablename: a string representing the name you want the variable to be called in the UI
+//place: the spot in the UI that you want the item to be
+//variable: a reference to the variable you want to register to this menu option
+//big/small interval: how much you want the value to change with/without holding down ability 1
+
+method CreateMenuOption(ref define variableName, ref define place, ref define startingValue, ref define smallInterval, ref define bigInterval){ 
+    menuOptionVars[place] = startingValue;
+    menuOptionSmallIntervals[place] = smallInterval;
+    menuOptionBigIntervals[place] = bigInterval;
+
+    CreateHudText(menuVisibleTo, <"<0>: <1> <2>", variableName, selectedOption==place? "->":"", menuOptionVars[place]>,
+                                                                            Null(), Null(), Location.Left, 
+                                                                            place, Color.White, Color.White, 
+                                                                            Color.White, StringRev.VisibleToAndString, Spectators.VisibleNever);
+    
+}
+
+
+//Turns the UI on and off. When the UI is turned on, the rule is aborted, but turning the UI back off will apply the values you've entered.
+method ToggleUI(){
+    menuOpen = !menuOpen;
+
+    SetMoveSpeed(HostPlayer(), menuOpen?0:100);
+    menuVisibleTo = menuOpen?Append(menuVisibleTo, EventPlayer()):RemoveFromArray(menuVisibleTo, EventPlayer());
+
+    if(menuOpen){
+        DisallowButton(HostPlayer(), Button.Ability1);
+    } else {
+        AllowButton(HostPlayer(), Button.Ability1);
+    }
+}
+
+
+
+method MoveDownMenu(){
+    selectedOption = Min(CountOf(menuOptionVars)-1, selectedOption+1);
+}
+
+method MoveUpMenu(){
+    selectedOption = Max(0, selectedOption-1);
+}
+
+method DecreaseValue(){
+    define interval = IsButtonHeld(HostPlayer(), Button.Ability1)? menuOptionBigIntervals[selectedOption]:menuOptionSmallIntervals[selectedOption];
+    menuOptionVars[selectedOption] -= interval;
+}
+
+method IncreaseValue(){
+    define interval = IsButtonHeld(HostPlayer(), Button.Ability1)? menuOptionBigIntervals[selectedOption]:menuOptionSmallIntervals[selectedOption];
+    menuOptionVars[selectedOption] += interval;
+
+}
+
+method ControlMenu(){
+    define throttle = ThrottleOf(EventPlayer());
+    //If pressing W, then go upwards. Set UDalreadyPressed so we only do it once
+    if(ZOf(throttle)==1 && !UDalreadyPressed){
+        MoveUpMenu();
+        UDalreadyPressed = true;
+    } else if(ZOf(throttle)==-1 && !UDalreadyPressed){
+        MoveDownMenu();
+        UDalreadyPressed = true;
+    } else if(ZOf(throttle)==0){
+        UDalreadyPressed = false;
+    }
+    //LDPressCount goes up once a cycle. When a certain number of cycles has passed, we start rapid-fire changing the value
+    if(XOf(throttle)==1){
+        if(LDPressCount==0 || (LDPressCount >= 20 && (LDPressCount - 20)%10==0))
+        {
+            DecreaseValue();
+        }
+        LDPressCount += 1;
+    } else if(XOf(throttle)==-1){
+        if(LDPressCount==0 || (LDPressCount >= 20 && (LDPressCount - 20)%10==0))
+        {
+            IncreaseValue();
+        }
+        LDPressCount += 1;
+    } else if(XOf(throttle)==0){
+        LDPressCount = 0;
+    }
+}
+
+method GetVariable(ref define index){ 
+    return menuOptionVars[index];
+}
+
+method SetVariable(ref define index, ref define value){
+    menuOptionVars[index] = value;
+}
+
+
+rule:"Control Menu"
+Event.OngoingPlayer
+if(menuOpen)
+if(ArrayContains(menuVisibleTo, EventPlayer())){
+    while(True()){
+        ControlMenu();
+        MinWait();
+        AbortIfConditionIsFalse();
+    }
+}
