@@ -90,9 +90,8 @@ method ControlMenu(){
     }
 }
 
-method GetVariable(ref define index){ 
-    return menuOptionVars[index];
-}
+macro GetVariable(ref define index): menuOptionVars[index];
+
 
 method SetVariable(ref define index, ref define value){
     menuOptionVars[index] = value;
