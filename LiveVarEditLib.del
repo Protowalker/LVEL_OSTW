@@ -13,7 +13,7 @@ private globalvar define LDPressCount = 0;
 //variable: a reference to the variable you want to register to this menu option
 //big/small interval: how much you want the value to change with/without holding down ability 1
 
-method CreateMenuOption(ref define variableName, ref define place, ref define startingValue, ref define smallInterval, ref define bigInterval){ 
+method CreateMenuOptionFloat(ref define variableName, ref define place, ref define startingValue, ref define smallInterval, ref define bigInterval){ 
     menuOptionVars[place] = startingValue;
     menuOptionSmallIntervals[place] = smallInterval;
     menuOptionBigIntervals[place] = bigInterval;

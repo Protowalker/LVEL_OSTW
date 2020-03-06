@@ -14,8 +14,8 @@ rule:"Setup"
 Event.OngoingGlobal
 {
     //CreateMenuOption(nameOfVariable, index, startingValue, smallInterval, bigInterval)
-    CreateMenuOption("Speed", 0, 100, 1,5);
-    CreateMenuOption("Gravity", 1, 100, 1,10);
+    CreateMenuOptionFloat("Speed", 0, 100, 1,5);
+    CreateMenuOptionFloat("Gravity", 1, 100, 1,10);
 }
 
 
