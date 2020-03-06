@@ -31,8 +31,7 @@ method ToggleUI(){
     menuOpen = !menuOpen;
 
     SetMoveSpeed(HostPlayer(), menuOpen?0:100);
-    menuVisibleTo = menuOpen?Append(menuVisibleTo, EventPlayer()):RemoveFromArray(menuVisibleTo, EventPlayer());
-
+    menuVisibleTo = menuOpen?HostPlayer():Null();
     if(menuOpen){
         DisallowButton(HostPlayer(), Button.Ability1);
     } else {
