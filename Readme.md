@@ -25,6 +25,6 @@ The value will change by the small interval you set in the CreateMenuOption func
 
 
 ## Roadmap
-- [] Vector Editing Support
-- [] Support for multiple admins
-- [] Support for pre-set lists, such as of strings, heroes or icons
+- [ ] Vector Editing Support
+- [ ] Support for multiple admins
+- [ ] Support for pre-set lists, such as of strings, heroes or icons
