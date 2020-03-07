@@ -18,7 +18,7 @@ method CreateMenuOptionFloat(ref define variableName, ref define place, ref defi
     menuOptionSmallIntervals[place] = smallInterval;
     menuOptionBigIntervals[place] = bigInterval;
 
-    CreateHudText(menuVisibleTo, <"<0>: <1> <2>", variableName, selectedOption==place? "->":"", menuOptionVars[place]>,
+    CreateHudText(menuVisibleTo, <"<0>: <1> <2>", variableName, selectedOption==place? IconString(Icon.ArrowRight):"", menuOptionVars[place]>,
                                                                             Null(), Null(), Location.Left, 
                                                                             place, Color.White, Color.White, 
                                                                             Color.White, StringRev.VisibleToAndString, Spectators.VisibleNever);

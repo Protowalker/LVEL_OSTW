@@ -7,6 +7,7 @@ import "LiveVarEditLib.del";
 //Likewise, if you want to set a variable from somewhere in the code other than the debug menu, use SetVariable(index, value)
 macro Speed: GetVariable(0);
 macro Gravity: GetVariable(1);
+macro Damage: GetVariable(2);
 
 
 //At the beginning of the game mode, the menu must be created
@@ -16,6 +17,7 @@ Event.OngoingGlobal
     //CreateMenuOption(nameOfVariable, index, startingValue, smallInterval, bigInterval)
     CreateMenuOptionFloat("Speed", 0, 100, 1,5);
     CreateMenuOptionFloat("Gravity", 1, 100, 1,10);
+    CreateMenuOptionFloat("Damage", 2, 100, 5, 10);
 }
 
 
@@ -32,6 +34,7 @@ if(IsButtonHeld(EventPlayer(), Button.Crouch) && IsButtonHeld(EventPlayer(), But
         //The beauty of the GetVariable macros is shown here, where Speed appears to just be a normal variable
         SetMoveSpeed(AllPlayers(), Speed);
         SetGravity(AllPlayers(), Gravity);
+        SetDamageDealt(AllPlayers(), Damage);
     }
 }
 
