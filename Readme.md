@@ -3,6 +3,9 @@ This is a library that makes it incredibly simple to add a menu for changing var
 
 To use it in your code, simply drop it into the same folder as your other files and import it in! VariableMenuExample.del shows all of the functions and how to use them.
 
+## Prerequisites
+- [Overwatch Script To Workshop](https://github.com/ItsDeltin/Overwatch-Script-To-Workshop)
+
 ## How To Use
 In your code, you'll have to set up the toggle action yourself; in the VariableMenu example, for instance, the menu is set to toggle on and off when the host presses crouch and interact:
 
